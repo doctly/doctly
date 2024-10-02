@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "doctly"
+version = "0.1.0"
+authors = [
+  { name="Doctly", email="support@doctly.ai" },
+]
+description = "Python client library for the Doctly API"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["doctly", "api", "client", "pdf", "markdown"]
+dependencies = [
+    "requests",
+]
+
+[project.urls]
+"Homepage" = "https://doctly.ai"
+"Bug Tracker" = "https://github.com/doctly/doctly/issues"
+"Documentation" = "https://github.com/doctly/doctly#readme"
+"Source" = "https://github.com/doctly/doctly"
+
+[project.optional-dependencies]
+dev = ["pytest", "responses"]
+
+[tool.setuptools]
+packages = ["doctly"]
