@@ -248,12 +248,14 @@ def test_accuracy_lite_parameter(client, tmp_path):
                     # Extract the accuracy value
                     accuracy_value = part.split('\r\n\r\n')[1].strip()
                     request_data['accuracy'] = accuracy_value
-        
         # Check if accuracy is correctly set to 'lite'
         assert request_data.get('accuracy') == 'lite'
-        
         # Return a successful response
-        return (200, {}, json.dumps([{"id": "12345", "status": "COMPLETED", "download_url": "https://example.com/downloads/12345.md"}]))
+        return (200, {}, json.dumps([{
+            "id": "12345",
+            "status": "COMPLETED",
+            "download_url": "https://example.com/downloads/12345.md"
+        }]))
 
     # Register the callback for the POST request
     responses.add_callback(
@@ -262,7 +264,6 @@ def test_accuracy_lite_parameter(client, tmp_path):
         callback=request_callback,
         content_type='application/json',
     )
-    
     # Mock the GET for the download
     responses.add(
         responses.GET,
@@ -293,12 +294,14 @@ def test_accuracy_ultra_parameter(client, tmp_path):
                     # Extract the accuracy value
                     accuracy_value = part.split('\r\n\r\n')[1].strip()
                     request_data['accuracy'] = accuracy_value
-        
         # Check if accuracy is correctly set to 'ultra'
         assert request_data.get('accuracy') == 'ultra'
-        
         # Return a successful response
-        return (200, {}, json.dumps([{"id": "12345", "status": "COMPLETED", "download_url": "https://example.com/downloads/12345.md"}]))
+        return (200, {}, json.dumps([{
+            "id": "12345",
+            "status": "COMPLETED",
+            "download_url": "https://example.com/downloads/12345.md"
+        }]))
 
     # Register the callback for the POST request
     responses.add_callback(
@@ -307,7 +310,6 @@ def test_accuracy_ultra_parameter(client, tmp_path):
         callback=request_callback,
         content_type='application/json',
     )
-    
     # Mock the GET for the download
     responses.add(
         responses.GET,
@@ -326,7 +328,9 @@ def test_accuracy_ultra_parameter(client, tmp_path):
 
 @responses.activate
 def test_process_with_accuracy_parameter(client, tmp_path):
-    """Test that the process method correctly handles the accuracy parameter."""
+    """Test that the process method correctly handles the accuracy
+    parameter.
+    """
     # Create a callback to inspect the request data
     def request_callback(request):
         # Parse the request data
@@ -338,12 +342,14 @@ def test_process_with_accuracy_parameter(client, tmp_path):
                     # Extract the accuracy value
                     accuracy_value = part.split('\r\n\r\n')[1].strip()
                     request_data['accuracy'] = accuracy_value
-        
         # Check if accuracy is correctly set to 'ultra'
         assert request_data.get('accuracy') == 'ultra'
-        
         # Return a successful response
-        return (200, {}, json.dumps([{"id": "12345", "status": "COMPLETED", "download_url": "https://example.com/downloads/12345.md"}]))
+        return (200, {}, json.dumps([{
+            "id": "12345",
+            "status": "COMPLETED",
+            "download_url": "https://example.com/downloads/12345.md"
+        }]))
 
     # Register the callback for the POST request
     responses.add_callback(
@@ -352,7 +358,6 @@ def test_process_with_accuracy_parameter(client, tmp_path):
         callback=request_callback,
         content_type='application/json',
     )
-    
     # Mock the GET for the download
     responses.add(
         responses.GET,

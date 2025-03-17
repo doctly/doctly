@@ -8,9 +8,11 @@ class DoctlyError(Exception):
 
     pass
 
+
 class Accuracy(Enum):
     LITE = "lite"
     ULTRA = "ultra"
+
 
 class Client:
     def __init__(self, api_key, base_url="https://api.doctly.ai"):
@@ -20,7 +22,10 @@ class Client:
             "Authorization": f"Bearer {self.api_key}",
         }
 
-    def process(self, file_path, accuracy: Accuracy = Accuracy.LITE, wait_time=5, timeout=300, **kwargs):
+    def process(
+        self, file_path, accuracy: Accuracy = Accuracy.LITE,
+        wait_time=5, timeout=300, **kwargs
+    ):
         """
         Uploads a PDF file to the backend, waits for processing, and downloads
         the resulting content.
@@ -29,7 +34,8 @@ class Client:
         - file_path (str): Path to the PDF file to upload.
         - accuracy (Accuracy): Processing accuracy level (LITE or ULTRA).
         - wait_time (int): Time in seconds to wait between polling the status.
-        - timeout (int): Maximum time in seconds to wait for processing to complete.
+        - timeout (int): Maximum time in seconds to wait for processing to
+          complete.
         - **kwargs: Additional parameters for future extensions.
 
         Returns:
@@ -47,7 +53,7 @@ class Client:
 
         # Prepare request data
         request_data = kwargs.copy()  # Start with any additional parameters
-        
+
         # Add accuracy parameter to the request if specified
         if accuracy:
             request_data["accuracy"] = accuracy.value
@@ -113,7 +119,10 @@ class Client:
         content = response.text
         return content
 
-    def to_markdown(self, file_path, accuracy: Accuracy = Accuracy.LITE, wait_time=5, timeout=300, **kwargs):
+    def to_markdown(
+        self, file_path, accuracy: Accuracy = Accuracy.LITE,
+        wait_time=5, timeout=300, **kwargs
+    ):
         """
         Uploads a PDF file to the backend, waits for processing, and downloads
         the resulting Markdown content.
@@ -122,7 +131,8 @@ class Client:
         - file_path (str): Path to the PDF file to upload.
         - accuracy (Accuracy): Processing accuracy level (LITE or ULTRA).
         - wait_time (int): Time in seconds to wait between polling the status.
-        - timeout (int): Maximum time in seconds to wait for processing to complete.
+        - timeout (int): Maximum time in seconds to wait for processing to
+          complete.
         - **kwargs: Additional parameters for future extensions.
 
         Returns:
