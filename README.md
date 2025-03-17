@@ -1,6 +1,6 @@
 # Doctly
 
-Doctly is a Python client library that provides a simple way to interact with the Doctly backend API. With Doctly, you can effortlessly upload PDF documents, convert them to Markdown, and retrieve the converted files—all with just a few lines of code.
+Doctly is a Python client library that provides a simple way to interact with the Doctly backend API. With Doctly, you can effortlessly upload PDF documents, process them to Markdown, and retrieve the converted content—all with just a few lines of code.
 
 ## Table of Contents
 
@@ -8,11 +8,13 @@ Doctly is a Python client library that provides a simple way to interact with th
 - [Quick Start](#quick-start)
 - [Usage](#usage)
   - [Initialization](#initialization)
-  - [Convert PDF to Markdown](#convert-pdf-to-markdown)
+  - [Process PDF Documents](#process-pdf-documents)
   - [Customizing Polling Parameters](#customizing-polling-parameters)
+  - [Accuracy Levels](#accuracy-levels)
   - [Error Handling](#error-handling)
 - [API Reference](#api-reference)
   - [`Client` Class](#client-class)
+  - [`Accuracy` Enum](#accuracy-enum)
   - [`DoctlyError` Exception](#doctlyerror-exception)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -35,15 +37,15 @@ import doctly
 # Initialize the Doctly client with your API key
 client = doctly.Client(api_key='YOUR_API_KEY')
 
-# Convert a PDF file to Markdown
+# Process a PDF file
 try:
-    markdown_content = client.to_markdown('path/to/your/file.pdf')
+    content = client.process('path/to/your/file.pdf')
     
-    # Save the Markdown content to a file
+    # Save the processed content to a file
     with open('output.md', 'w') as f:
-        f.write(markdown_content)
+        f.write(content)
     
-    print("Conversion successful! Markdown file saved as 'output.md'")
+    print("Processing successful! Content saved as 'output.md'")
 except doctly.DoctlyError as e:
     print(f"An error occurred: {e}")
 ```
@@ -61,19 +63,19 @@ import doctly
 client = doctly.Client(api_key='YOUR_API_KEY')
 ```
 
-### Convert PDF to Markdown
+### Process PDF Documents
 
-The primary functionality of Doctly is to upload a PDF file, convert it to Markdown, and retrieve the converted content. Here's how to do it:
+The primary functionality of Doctly is to upload a PDF file, process it, and retrieve the converted content. Here's how to do it:
 
 ```python
 try:
-    markdown_content = client.to_markdown('path/to/your/file.pdf')
+    content = client.process('path/to/your/file.pdf')
     
-    # Optional: Save the Markdown content to a file
+    # Optional: Save the content to a file
     with open('output.md', 'w') as f:
-        f.write(markdown_content)
+        f.write(content)
     
-    print("Conversion successful!")
+    print("Processing successful!")
 except doctly.DoctlyError as e:
     print(f"An error occurred: {e}")
 ```
@@ -83,20 +85,34 @@ except doctly.DoctlyError as e:
 Doctly handles the asynchronous nature of the backend API by polling the document status. You can customize the polling interval (`wait_time`) and the maximum waiting duration (`timeout`) as needed:
 
 ```python
-markdown_content = client.to_markdown(
+content = client.process(
     'path/to/your/file.pdf',
     wait_time=10,  # Time in seconds between each status check
-    timeout=600     # Maximum time in seconds to wait for processing
+    timeout=600    # Maximum time in seconds to wait for processing
 )
+```
+
+### Accuracy Levels
+
+Doctly supports different accuracy levels for processing documents. You can specify the accuracy level using the `accuracy` parameter:
+
+```python
+from doctly import Accuracy
+
+# Process with LITE accuracy (faster, default)
+content_lite = client.process('path/to/your/file.pdf', accuracy=Accuracy.LITE)
+
+# Process with Precistion ULTRA accuracy (more accurate but slower)
+content_ultra = client.process('path/to/your/file.pdf', accuracy=Accuracy.ULTRA)
 ```
 
 ### Error Handling
 
-Errors are handled with the `DoctlyError` exception. Catch this exception to handle any issues that arise during the upload, conversion, or download processes:
+Errors are handled with the `DoctlyError` exception. Catch this exception to handle any issues that arise during the upload, processing, or download processes:
 
 ```python
 try:
-    markdown_content = client.to_markdown('file.pdf')
+    content = client.process('file.pdf')
 except doctly.DoctlyError as e:
     print(f"Error: {e}")
     # Additional error handling logic
@@ -108,33 +124,52 @@ except doctly.DoctlyError as e:
 
 The `Client` class encapsulates all interactions with the Doctly backend API.
 
-#### `__init__(api_key: str)`
+#### `__init__(api_key: str, base_url: str = "https://api.doctly.ai")`
 
 - **Description**: Initializes the Doctly client with the provided API key and optional base URL.
 - **Parameters**:
   - `api_key` (str): Your Doctly API key.
+  - `base_url` (str, optional): The base URL for the Doctly API. Defaults to "https://api.doctly.ai".
 - **Example**:
 
   ```python
   client = doctly.Client(api_key='YOUR_API_KEY')
   ```
 
-#### `to_markdown(file_path: str, wait_time: int = 5, timeout: int = 300) -> str`
+#### `process(file_path: str, accuracy: Accuracy = Accuracy.LITE, wait_time: int = 5, timeout: int = 300, **kwargs) -> str`
 
-- **Description**: Uploads a PDF file to the backend, polls for processing status, and returns the converted Markdown content.
+- **Description**: Uploads a PDF file to the backend, polls for processing status, and returns the processed content.
 - **Parameters**:
   - `file_path` (str): Path to the PDF file to upload.
+  - `accuracy` (Accuracy, optional): Processing accuracy level (LITE or ULTRA). Defaults to `Accuracy.LITE`.
   - `wait_time` (int, optional): Time in seconds between each status check. Defaults to `5` seconds.
   - `timeout` (int, optional): Maximum time in seconds to wait for processing. Defaults to `300` seconds (5 minutes).
+  - `**kwargs`: Additional parameters for future extensions.
 - **Returns**:
-  - `markdown_content` (str): The content of the converted Markdown file.
+  - `content` (str): The processed content.
 - **Raises**:
   - `DoctlyError`: If there's an error during upload, processing, or download.
 - **Example**:
 
   ```python
-  markdown = client.to_markdown('document.pdf')
+  content = client.process('document.pdf', accuracy=Accuracy.ULTRA)
   ```
+
+### `Accuracy` Enum
+
+An enumeration that defines the available accuracy levels for document processing.
+
+- `Accuracy.LITE`: Precision - Faster processing with great accuracy.
+- `Accuracy.ULTRA`: Precision Ultra - Extremly good accuracy, but may take longer. This process generates multiple versions for each page, picking the highest accuracy one.
+
+#### Example Usage
+
+```python
+from doctly import Accuracy
+
+# Process with ULTRA accuracy
+content = client.process('file.pdf', accuracy=Accuracy.ULTRA)
+```
 
 ### `DoctlyError` Exception
 
@@ -144,7 +179,7 @@ A custom exception class for handling errors specific to the Doctly library.
 
 ```python
 try:
-    markdown_content = client.to_markdown('file.pdf')
+    content = client.process('file.pdf')
 except doctly.DoctlyError as e:
     print(f"Doctly encountered an error: {e}")
 ```
