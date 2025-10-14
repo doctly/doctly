@@ -5,7 +5,6 @@ from enum import Enum
 
 class DoctlyError(Exception):
     """Custom exception for Doctly errors."""
-
     pass
 
 
@@ -105,7 +104,7 @@ class Client:
             document = response.json()
             status = document.get("status")
 
-        download_url = document.get("download_url")
+        download_url = document.get("output_file_url")
         if not download_url:
             raise DoctlyError("No download URL returned from the server.")
 
@@ -116,7 +115,8 @@ class Client:
                 f"Error downloading processed content: {response.text}"
             )
 
-        content = response.text
+        content = response.content.decode("utf-8", errors="replace")
+
         return content
 
     def to_markdown(

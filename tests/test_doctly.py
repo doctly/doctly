@@ -21,7 +21,7 @@ def test_to_markdown_success(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"id": "12345", "status": "PENDING", "download_url": None}],
+        json=[{"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -30,7 +30,7 @@ def test_to_markdown_success(client, tmp_path):
     responses.add(
         responses.GET,
         f"{API_BASE_URL}12345",
-        json={"id": "12345", "status": "PROCESSING", "download_url": None},
+        json={"id": "12345", "status": "PROCESSING", "download_url": None, "output_file_url": None},
         status=200,
     )
 
@@ -42,6 +42,7 @@ def test_to_markdown_success(client, tmp_path):
             "id": "12345",
             "status": "COMPLETED",
             "download_url": "https://example.com/downloads/12345.md",
+            "output_file_url": "https://example.com/downloads/12345.md",
         },
         status=200,
     )
@@ -87,7 +88,7 @@ def test_to_markdown_processing_failed(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"id": "12345", "status": "PENDING", "download_url": None}],
+        json=[{"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -95,7 +96,7 @@ def test_to_markdown_processing_failed(client, tmp_path):
     responses.add(
         responses.GET,
         f"{API_BASE_URL}12345",
-        json={"id": "12345", "status": "FAILED", "download_url": None},
+        json={"id": "12345", "status": "FAILED", "download_url": None, "output_file_url": None},
         status=200,
     )
 
@@ -114,7 +115,7 @@ def test_to_markdown_timeout(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"id": "12345", "status": "PENDING", "download_url": None}],
+        json=[{"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -123,7 +124,7 @@ def test_to_markdown_timeout(client, tmp_path):
         responses.add(
             responses.GET,
             f"{API_BASE_URL}12345",
-            json={"id": "12345", "status": "PENDING", "download_url": None},
+            json={"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None},
             status=200,
         )
 
@@ -143,7 +144,7 @@ def test_to_markdown_no_document_id(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"status": "PENDING", "download_url": None}],
+        json=[{"status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -162,7 +163,7 @@ def test_to_markdown_no_download_url(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"id": "12345", "status": "PENDING", "download_url": None}],
+        json=[{"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -174,7 +175,8 @@ def test_to_markdown_no_download_url(client, tmp_path):
         json={
             "id": "12345",
             "status": "COMPLETED",
-            "download_url": None
+            "download_url": None,
+            "output_file_url": None
         },
         status=200,
     )
@@ -194,7 +196,7 @@ def test_to_markdown_download_failure(client, tmp_path):
     responses.add(
         responses.POST,
         API_BASE_URL,
-        json=[{"id": "12345", "status": "PENDING", "download_url": None}],
+        json=[{"id": "12345", "status": "PENDING", "download_url": None, "output_file_url": None}],
         status=200,
     )
 
@@ -207,6 +209,7 @@ def test_to_markdown_download_failure(client, tmp_path):
             "id": "12345",
             "status": "COMPLETED",
             "download_url": "https://example.com/downloads/12345.md",
+            "output_file_url": "https://example.com/downloads/12345.md",
         },
         status=200,
     )
@@ -254,7 +257,8 @@ def test_accuracy_lite_parameter(client, tmp_path):
         return (200, {}, json.dumps([{
             "id": "12345",
             "status": "COMPLETED",
-            "download_url": "https://example.com/downloads/12345.md"
+            "download_url": "https://example.com/downloads/12345.md",
+            "output_file_url": "https://example.com/downloads/12345.md",
         }]))
 
     # Register the callback for the POST request
@@ -300,7 +304,8 @@ def test_accuracy_ultra_parameter(client, tmp_path):
         return (200, {}, json.dumps([{
             "id": "12345",
             "status": "COMPLETED",
-            "download_url": "https://example.com/downloads/12345.md"
+            "download_url": "https://example.com/downloads/12345.md",
+            "output_file_url": "https://example.com/downloads/12345.md",
         }]))
 
     # Register the callback for the POST request
@@ -348,7 +353,8 @@ def test_process_with_accuracy_parameter(client, tmp_path):
         return (200, {}, json.dumps([{
             "id": "12345",
             "status": "COMPLETED",
-            "download_url": "https://example.com/downloads/12345.md"
+            "download_url": "https://example.com/downloads/12345.md",
+            "output_file_url": "https://example.com/downloads/12345.md",
         }]))
 
     # Register the callback for the POST request

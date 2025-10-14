@@ -1,3 +1,6 @@
 # Testing and development dependencies
 pytest
 responses
+requests
+build
+twine
